@@ -265,7 +265,7 @@
             <div
                 class="mx-auto flex w-full max-w-7xl flex-row items-center justify-between gap-6 p-6 text-sm opacity-75 max-md:flex-col"
             >
-                <p>Copyright &copy; 2024 Echelon Media • Not affiliated with Discord.</p>
+                <p>Copyright &copy; 2024 Echelon Media</p>
                 <div class="flex flex-row gap-4">
                     <a
                         href="https://x.com/thenetwrx"
