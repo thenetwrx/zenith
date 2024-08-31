@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../dev.db"
+}
+
+model User {
+  id           String    @id
+  provider_id  Int
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+  display_name String?
+  username     String
+  email        String
+  admin        Boolean   @default(false)
+  banned       Boolean   @default(false)
+  subscription String?
+  sessions     Session[]
+  polls         Poll[]
+}
+
+model Poll {
+  id          String   @id
+  title       String
+  description String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  owner_id    String
+  owner       User     @relation(fields: [owner_id], references: [id], onDelete: Cascade)
+  options     Option[]
+  votes       Vote[]
+
+  @@index([owner_id])
+}
+
+model Option {
+  id      String @id
+  text    String
+  poll_id String
+  poll    Poll   @relation(fields: [poll_id], references: [id], onDelete: Cascade)
+  votes   Vote[]
+
+  @@index([poll_id])
+}
+
+model Vote {
+  id         String   @id
+  ip_address String
+  created_at DateTime @default(now())
+  poll_id    String
+  poll       Poll     @relation(fields: [poll_id], references: [id], onDelete: Cascade)
+  option_id  String
+  option     Option   @relation(fields: [option_id], references: [id], onDelete: Cascade)
+
+  @@unique([poll_id, ip_address])
+  @@index([poll_id])
+  @@index([option_id])
+}
+
+model Session {
+  id                    String   @id
+  created_at            DateTime
+  userId                String
+  expiresAt             DateTime
+  provider_access_token String
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
